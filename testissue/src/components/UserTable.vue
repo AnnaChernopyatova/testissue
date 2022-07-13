@@ -1,18 +1,23 @@
 <template>
     <div>
         <h2>Users</h2>
-        <UserCard v-for="user in userData" :key="user.id" :user="user" />
+        <UserCard v-for="user in userData" :key="user.id" user="user" />
     </div>
 </template>
 
-<script setup lang="ts">
-import { onMounted } from 'vue';
+<script lang="ts">
+import { createApp } from 'vue';
 import UserCard from './UserCard.vue';
 import User from '../interface/UserInterface';
 
-let userData: User[];
+export default createApp ({
+    data() {
+        return {
+            userData: [] as Array<User>
+        }
+    },
 
-onMounted(() => {
+    mounted() {
     try {
         fetch('https://jsonplaceholder.typicode.com/users/')
         .then((response) => {
@@ -23,8 +28,7 @@ onMounted(() => {
             })
         .then((data) => {
             if (Array.isArray(data)) {
-                userData = data;
-                console.log(userData)
+                this.userData = data;
             } else throw new Error('Invalid Data Format')
         })
     }
@@ -34,8 +38,9 @@ onMounted(() => {
         }
         else throw new Error('Internal Server Error');
     }
-    
+}
 })
+
 </script>
 
 <style scoped>
